@@ -6,9 +6,12 @@ from plotly.subplots import make_subplots
 
 
 stock = yf.Ticker("MSFT")
+stock2 = yf.Ticker("TSLA")
 stock_data = stock.history(period="max")
+stock_data2 = stock2.history(period="max")
 
 print(stock_data)
+print(stock_data2)
 
 def make_graph(stock_data, revenue_data, stock):
     fig = make_subplots(rows=2, cols=1, shared_xaxes=True, subplot_titles=("Historical Share Price", "Historical Revenue"), vertical_spacing = .3)
