@@ -10,7 +10,7 @@ class FetchData :
     def get_cryto_prices(self) :
         try :
             params = {
-                'ids' : 'bitcoin, ethereum, doge, cardano',
+                'ids' : 'bitcoin,ethereum,cardano',
                 'vs_currencies' : 'usd, eur',
                 'include_24hr_change' : 'true'
             }
