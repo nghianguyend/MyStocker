@@ -6,19 +6,22 @@ import os
 
 class FetchData :
     def __init__(self) :
-        load_dotenv()
-        self.crypto_api = os.getenv("COINAPI_KEY")
-        self.base_url = "https://rest.coinapi.io/v1"
-        
-        if not self.crypto_api:
-            raise ValueError("No API key found. Set COINAPI_KEY in .env")
-
-        self.headers = {"X-CoinAPI-Key": self.crypto_api}
-        
-    def get_exchange_rate(self, base="BTC", quote="USD"):
-        """Fetch latest exchange rate for base/quote pair"""
-        url = f"{self.base_url}/exchangerate/{base}/{quote}"
-        response = requests.get(url, headers=self.headers)
-        response.raise_for_status()
-        return response.json()
+        self.crypto_url = "https://api.coingecko.com/api/v3/simple/price"
+    def get_cryto_prices(self) :
+        try :
+            params = {
+                'ids' : 'bitcoin, ethereum, doge, cardano',
+                'vs_currencies' : 'usd, eur',
+                'include_24hr_change' : 'true'
+            }
+            resp = requests.get(self.crypto_url, params=params)
+            resp.raise_for_status()
+            if resp.status_code == 200 :
+                data = resp.json()
+                return data
+        except requests.exceptions.HTTPError as e:
+            print("HTTP error:", e)
+        except requests.exceptions.RequestException as e:
+            print("Request failed:", e)
+        return None
         

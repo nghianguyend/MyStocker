@@ -3,7 +3,13 @@ from datetime import datetime
 import pandas as pd;
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from charts import FetchData
 
+if __name__ == "__main__":
+    client = FetchData()
+    prices = client.get_cryto_prices()
+    if prices:
+        print(prices)
 
 # stock = yf.Ticker("MSFT")
 # stock2 = yf.Ticker("TSLA")
