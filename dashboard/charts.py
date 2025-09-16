@@ -10,9 +10,9 @@ class FetchData :
     def get_cryto_prices(self) :
         try :
             params = {
-                'ids' : 'bitcoin,ethereum,cardano',
-                'vs_currencies' : 'usd, eur',
-                'include_24hr_change' : 'true'
+                'ids': 'bitcoin,ethereum,cardano,dogecoin,solana,polkadot,litecoin,tron,chainlink,polygon',
+                'vs_currencies': 'usd,eur',
+                'include_24hr_change': 'true'
             }
             resp = requests.get(self.crypto_url, params=params, timeout=10)
             resp.raise_for_status()
@@ -24,8 +24,10 @@ class FetchData :
                 for name, coin_info in datas.items() :
                     coin_list.append({
                         'coin' : name.title(),
-                        'price' : coin_info['usd'],
-                        'exchange' : coin_info['usd_24h_change'],
+                        'usd_price' : coin_info['usd'], 
+                        'usd_exchange' : coin_info['usd_24h_change'],
+                        'eur_price' : coin_info['eur'],
+                        'eur_exchange' : coin_info['eur_24h_change'],
                         'time' : datetime.now()
                     })
                 return pd.DataFrame(coin_list)
