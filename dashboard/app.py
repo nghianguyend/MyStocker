@@ -7,9 +7,9 @@ from charts import FetchData
 
 if __name__ == "__main__":
     client = FetchData()
-    prices = client.get_cryto_prices()
-    if prices:
-        print(prices)
+    infos = client.get_cryto_prices()
+    df = pd.DataFrame(infos).T   # .T transposes so coins are rows
+    print(df)
 
 # stock = yf.Ticker("MSFT")
 # stock2 = yf.Ticker("TSLA")

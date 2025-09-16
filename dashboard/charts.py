@@ -14,11 +14,23 @@ class FetchData :
                 'vs_currencies' : 'usd, eur',
                 'include_24hr_change' : 'true'
             }
-            resp = requests.get(self.crypto_url, params=params)
+            resp = requests.get(self.crypto_url, params=params, timeout=10)
             resp.raise_for_status()
             if resp.status_code == 200 :
-                data = resp.json()
-                return data
+                datas = resp.json()
+                # return data.items()
+                coin_list = []
+                
+                for name, coin_info in datas.items() :
+                    coin_list.append({
+                        'coin' : name.title(),
+                        'price' : coin_info['usd'],
+                        'exchange' : coin_info['usd_24h_change'],
+                        'time' : datetime.now()
+                    })
+                return pd.DataFrame(coin_list)
+                
+                
         except requests.exceptions.HTTPError as e:
             print("HTTP error:", e)
         except requests.exceptions.RequestException as e:
