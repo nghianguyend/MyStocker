@@ -3,7 +3,7 @@ from datetime import datetime
 import pandas as pd;
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from charts import FetchData
+from datas import FetchData
 
 if __name__ == "__main__":
     client = FetchData()
