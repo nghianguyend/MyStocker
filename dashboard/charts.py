@@ -1,8 +1,8 @@
 import requests
 import pandas as pd 
-from datetime import datetime
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
-import os
+import yfinance as yf
 
 class FetchData :
     def __init__(self) :
@@ -38,4 +38,10 @@ class FetchData :
         except requests.exceptions.RequestException as e:
             print("Request failed:", e)
         return None
+    
+    def get_stock_prices(self, ticker, period, interval) :
+        end_date = datetime.now()
+        if period == "1wk" :
+            start_date = end_date - timedelta(days=7)
+            
         
