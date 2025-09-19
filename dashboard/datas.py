@@ -32,10 +32,10 @@ class FetchData :
                         'time' : datetime.now()
                     })
                 return pd.DataFrame(coin_list)       
-        except requests.exceptions.HTTPError as e:
-            print("HTTP error:", e)
-        except requests.exceptions.RequestException as e:
-            print("Request failed:", e)
+        except requests.exceptions.HTTPError as error:
+            print("HTTP error:", error)
+        except requests.exceptions.RequestException as error:
+            print("Request failed:", error)
         return None
     
         
