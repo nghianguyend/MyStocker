@@ -3,7 +3,8 @@ import pandas as pd
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import yfinance as yf
-
+import pytz
+import ta
 class FetchData :
     def __init__(self) :
         self.crypto_url = "https://api.coingecko.com/api/v3/simple/price"
@@ -45,6 +46,13 @@ class FetchData :
             stock_info = yf.download(ticker, start=start_date, end=end_date, interval=interval)
         else:
             stock_info = yf.download(ticker, period=period, interval=interval)
-
         return stock_info
-        
+    
+    def process_datas(self, data) :
+        if data.index.tzinfo == None :
+            data.index = data.index.tz_localize("UTC")
+        data.index = data.index.tz_convert("US/Eastern")
+        data.reset_index(inplace=True)
+        if "Date" in data.columns:
+            data.rename(columns={"Date": "Datetime"}, inplace=True)
+        return data

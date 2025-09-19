@@ -5,19 +5,31 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from datas import FetchData
 
+def main():
+    fetcher = FetchData()
+
+    # --- Test Crypto Prices ---
+    print("Fetching crypto prices...")
+    crypto_df = fetcher.get_cryto_prices()
+    if crypto_df is not None:
+        print(crypto_df.head(), "\n")
+
+    # --- Test Stock Prices ---
+    print("Fetching stock prices for AAPL (Apple)...")
+    stock_df = fetcher.get_stock_prices("AAPL", period="5d", interval="1d")
+    print("Before reset_index():")
+    print(stock_df.head(), "\n")   # Date is in the index
+
+    # Process the data (with reset_index)
+    stock_df = fetcher.process_datas(stock_df)
+    print("After process_datas (reset_index applied):")
+    print(stock_df.head())         # Datetime is now a column
+
 if __name__ == "__main__":
-    client = FetchData()
-    infos = client.get_cryto_prices()
-    df = pd.DataFrame(infos).T   # .T transposes so coins are rows
-    print(df)
+    main()
 
-# stock = yf.Ticker("MSFT")
-# stock2 = yf.Ticker("TSLA")
-# stock_data = stock.history(period="max")
-# stock_data2 = stock2.history(period="max")
 
-# print(stock_data)
-# print(stock_data2)
+
 
 # def make_graph(stock_data, revenue_data, stock):
 #     fig = make_subplots(rows=2, cols=1, shared_xaxes=True, subplot_titles=("Historical Share Price", "Historical Revenue"), vertical_spacing = .3)
