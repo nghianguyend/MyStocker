@@ -6,8 +6,10 @@ import yfinance as yf
 import pytz
 import ta
 class FetchData :
+    
     def __init__(self) :
-        self.crypto_url = "https://api.coingecko.com/api/v3/simple/price"
+        self.crypto_url = "https://api.coingecko.com/api/v3/simple/price" 
+        
     def get_cryto_prices(self) :
         try :
             params = {
