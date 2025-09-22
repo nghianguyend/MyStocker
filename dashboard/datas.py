@@ -56,3 +56,13 @@ class FetchData :
         if "Date" in data.columns:
             data.rename(columns={"Date": "Datetime"}, inplace=True)
         return data
+    
+    def calculate_metrics(self, data) :
+        last_close = data['Close'].iloc[0]
+        prev_close = data['Close'].iloc[-1]
+        change = last_close - prev_close
+        pct_change = (change / prev_close) * 100
+        high = data['High'].max()
+        low = data['Low'].min()
+        return last_close, change, pct_change, high, low
+        

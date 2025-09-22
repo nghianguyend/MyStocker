@@ -23,6 +23,9 @@ def main():
     stock_df = fetcher.process_datas(stock_df)
     print("After process_datas (reset_index applied):")
     print(stock_df.head())         # Datetime is now a column
+    
+    stock_datas = fetcher.calculate_metrics(stock_df)
+    print(stock_datas)
 
 if __name__ == "__main__":
     main()
