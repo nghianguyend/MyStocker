@@ -65,4 +65,21 @@ class FetchData :
         high = data['High'].max()
         low = data['Low'].min()
         return last_close, change, pct_change, high, low
-        
+    
+    def add_technical_indicators(self, data, sma_windows=[20], ema_windows=[20]):
+        """
+        Adds SMA and EMA columns to a DataFrame.
+
+        Parameters:
+            data (pd.DataFrame): Must have a 'Close' column.
+            sma_windows (list): List of integers for SMA periods.
+            ema_windows (list): List of integers for EMA periods.
+
+        Returns:
+            pd.DataFrame: Original DataFrame with new SMA and EMA columns.
+        """
+        for w in sma_windows:
+            data[f'SMA_{w}'] = ta.trend.sma_indicator(data['Close'], window=w)
+        for w in ema_windows:
+            data[f'EMA_{w}'] = ta.trend.ema_indicator(data['Close'], window=w)
+        return data
