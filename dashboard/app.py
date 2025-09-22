@@ -1,6 +1,4 @@
 import yfinance as yf
-from datetime import datetime
-import pandas as pd;
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from datas import FetchData
@@ -17,13 +15,13 @@ crypto_choice = st.sidebar.selectbox("Crypto", ["BTC-USD", "ETH-USD"])
 # Fetcher instance
 fetcher = FetchData()
 
-# --- Fetch Crypto Prices ---
+# Fetch Crypto Prices 
 st.subheader(f"Crypto Prices: {crypto_choice}")
 crypto_df = fetcher.get_cryto_prices(crypto_choice)
 if crypto_df is not None:
-    st.dataframe(crypto_df.tail(5))  # Show last 5 rows
+    st.dataframe(crypto_df.tail(5))  
 
-# --- Fetch Stock Prices ---
+# Fetch Stock Prices
 st.subheader(f"Stock Prices: {symbol}")
 stock_df = fetcher.get_stock_prices(symbol, period="5d", interval="1d")
 stock_df = fetcher.process_datas(stock_df)
@@ -36,7 +34,7 @@ st.metric(label="% Change", value=f"{metrics[2]:.2f}%")
 st.metric(label="High", value=f"${metrics[3]:.2f}")
 st.metric(label="Low", value=f"${metrics[4]:.2f}")
 
-# --- Plot Stock Chart ---
+# Make Stock Chart 
 fig = make_subplots(rows=1, cols=1)
 fig.add_trace(go.Candlestick(
     x=stock_df['Date'],
