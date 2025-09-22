@@ -10,10 +10,10 @@ class FetchData :
     def __init__(self) :
         self.crypto_url = "https://api.coingecko.com/api/v3/simple/price" 
         
-    def get_cryto_prices(self) :
+    def get_cryto_prices(self, coins="bitcoin,ethereum,cardano,dogecoin,solana,polkadot,litecoin,tron,chainlink,polygon") :
         try :
             params = {
-                'ids': 'bitcoin,ethereum,cardano,dogecoin,solana,polkadot,litecoin,tron,chainlink,polygon',
+                'ids': coins,
                 'vs_currencies': 'usd,eur',
                 'include_24hr_change': 'true'
             }
