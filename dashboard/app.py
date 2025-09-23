@@ -55,11 +55,11 @@ stock_df = fetcher.process_datas(stock_df)
 metrics = fetcher.calculate_metrics(stock_df)
 
 # Show metrics
-st.metric(label="Last Close", value=f"${metrics[0]:.2f}")
-st.metric(label="Change", value=f"${metrics[1]:.2f}")
-st.metric(label="% Change", value=f"{metrics[2]:.2f}%")
-st.metric(label="High", value=f"${metrics[3]:.2f}")
-st.metric(label="Low", value=f"${metrics[4]:.2f}")
+# st.metric(label="Last Close", value=f"${metrics[0]:.2f}")
+# st.metric(label="Change", value=f"${metrics[1]:.2f}")
+# st.metric(label="% Change", value=f"{metrics[2]:.2f}%")
+# st.metric(label="High", value=f"${metrics[3]:.2f}")
+# st.metric(label="Low", value=f"${metrics[4]:.2f}")
 
 # Make Stock Chart 
 fig = make_subplots(rows=1, cols=1)
