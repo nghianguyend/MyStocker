@@ -10,14 +10,41 @@ st.title("📈 Real Time Stock and Crypto Dashboard")
 # Sidebar
 st.sidebar.header("Dashboard Controls")
 symbol = st.sidebar.text_input("Stock Symbol", value="AAPL")
-crypto_choice = st.sidebar.selectbox("Crypto", ["BTC-USD", "ETH-USD"])
+crypto_choice = st.sidebar.selectbox(
+    "Crypto", 
+    ["Bitcoin (BTC)", 
+    "Ethereum (ETH)", 
+    "Cardano (ADA)", 
+    "Dogecoin (DOGE)", 
+    "Solana (SOL)", 
+    "Polkadot (DOT)", 
+    "Litecoin (LTC)", 
+    "Tron (TRX)", 
+    "Chainlink (LINK)", 
+    "Polygon (MATIC)"]
+)
+name_to_id = {
+    "Bitcoin (BTC)": "bitcoin",
+    "Ethereum (ETH)": "ethereum",
+    "Cardano (ADA)": "cardano",
+    "Dogecoin (DOGE)": "dogecoin",
+    "Solana (SOL)": "solana",
+    "Polkadot (DOT)": "polkadot",
+    "Litecoin (LTC)": "litecoin",
+    "Tron (TRX)": "tron",
+    "Chainlink (LINK)": "chainlink",
+    "Polygon (MATIC)": "polygon"
+}
+
+#Get GeckoAPI coin_id
+coin_id = name_to_id[crypto_choice]
 
 # Fetcher instance
 fetcher = FetchData()
 
 # Fetch Crypto Prices 
-st.subheader(f"Crypto Prices: {crypto_choice}")
-crypto_df = fetcher.get_cryto_prices(crypto_choice)
+st.subheader(f"Crypto Prices: {coin_id}")
+crypto_df = fetcher.get_cryto_prices(coin_id)
 if crypto_df is not None:
     st.dataframe(crypto_df.tail(5))  
 
