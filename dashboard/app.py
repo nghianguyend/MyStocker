@@ -25,6 +25,7 @@ crypto_choice = st.sidebar.selectbox(
 )
 period = st.sidebar.selectbox("Time Period", ["1 Day", "1 Week", "1 Month", "1 Year", "Max"])
 chart_type = st.sidebar.selectbox("Chart Type", ["Candlestick", "Line"])
+indicators = st.sidebar.multiselect("Technical Indicators", ["SMA 20", "EMA 20"])
 period_to_id = {
     "1 Day" : "1d", 
     "1 Week" : "1wk", 
@@ -66,10 +67,11 @@ if crypto_df is not None:
 
 # Fetch Stock Prices
 st.subheader(f"Stock Prices: {symbol}")
-stock_df = fetcher.get_stock_prices(symbol, period_to_id[period], interval_mapping[period_to_id[period]])
-stock_df = fetcher.process_datas(stock_df)
-stock_df = fetcher.add_technical_indicators(stock_df)
-last_close, change, pct_change, high, low, volume = fetcher.calculate_metrics(stock_df)
+stock_data = fetcher.get_stock_prices(symbol, period_to_id[period], interval_mapping[period_to_id[period]])
+stock_data = fetcher.process_datas(stock_data)
+# stock_data = fetcher.add_technical_indicators(stock_data)
+last_close, change, pct_change, high, low, volume = fetcher.calculate_metrics(stock_data)
+
 
 # Show metrics
 # st.metric(label="Last Close", value=f"${metrics[0]:.2f}")
