@@ -40,14 +40,34 @@ class FetchData :
         return None
     
         
-    def get_stock_prices(self, ticker, period="1mo", interval="1d"):
+    def get_stock_prices(self, ticker, period="1mo", interval="1d", in_euro=False):
         end_date = datetime.now()
         if period == "1wk":
             start_date = end_date - timedelta(days=7)
             stock_info = yf.download(ticker, start=start_date, end=end_date, interval=interval)
         else:
             stock_info = yf.download(ticker, period=period, interval=interval)
+
+        if in_euro:
+            ticker_info = yf.Ticker(ticker).info
+            currency = ticker_info.get("currency", "USD")
+            if currency != "EUR":
+                currency_map = {
+                    "USD": "EURUSD=X",
+                    "GBP": "EURGBP=X",
+                    "CHF": "EURCHF=X",
+                    "JPY": "EURJPY=X",
+                }
+                if currency in currency_map:
+                    fx_ticker = currency_map[currency]
+                    fx_data = yf.download(fx_ticker, period=period, interval=interval)
+                    fx_close = fx_data["Close"]
+                    # Align indices 
+                    fx_close_aligned, _ = fx_close.align(stock_info["Close"], join="right", method="ffill")
+                    for col in ["Open", "High", "Low", "Close"]:
+                        stock_info[col] = stock_info[col].div(fx_close_aligned)
         return stock_info
+
     
     def process_datas(self, data) :
         if data.index.tzinfo == None :

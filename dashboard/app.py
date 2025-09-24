@@ -24,6 +24,7 @@ crypto_choice = st.sidebar.selectbox(
     "Polygon (MATIC)"]
 )
 period = st.sidebar.selectbox("Time Period", ["1 Day", "1 Week", "1 Month", "1 Year", "Max"])
+currency_type = st.sidebar.selectbox("Currency", ["USD", "EUR"])
 chart_type = st.sidebar.selectbox("Chart Type", ["Candlestick", "Line"])
 indicators = st.sidebar.multiselect("Technical Indicators", ["SMA 20", "EMA 20"])
 period_to_id = {
@@ -67,16 +68,27 @@ if crypto_df is not None:
 
 # Fetch Stock Prices
 st.subheader(f"Stock Prices: {symbol}")
-stock_data = fetcher.get_stock_prices(symbol, period_to_id[period], interval_mapping[period_to_id[period]])
-stock_data = fetcher.process_datas(stock_data)
+stock_data_usd = fetcher.get_stock_prices(symbol, period_to_id[period], interval_mapping[period_to_id[period]], False)
+stock_data_usd = fetcher.process_datas(stock_data_usd)
 # stock_data = fetcher.add_technical_indicators(stock_data)
-last_close, change, pct_change, high, low, volume = fetcher.calculate_metrics(stock_data)
+last_close_usd, change_usd, pct_change_usd, high_usd, low_usd, volume_usd = fetcher.calculate_metrics(stock_data_usd)
 
-st.metric(
+stock_data_eur = fetcher.get_stock_prices(symbol, period_to_id[period], interval_mapping[period_to_id[period]], True)
+stock_data_eur = fetcher.process_datas(stock_data_eur)
+last_close_eur, change_eur, pct_change_eur, high_eur, low_eur, volume_eur = fetcher.calculate_metrics(stock_data_eur)
+if currency_type == "EUR" :
+    st.metric(
     label=f"{symbol} Price From {period}",
-    value=f"{float(last_close):.2f} USD",
-    delta=f"Changes : {float(change):.2f} ({float(pct_change):.2f} %)")
+    value=f"{float(last_close_eur):.2f} EUR",
+    delta=f"Changes : {float(change_eur):.2f} ({float(pct_change_eur):.2f} %)")
+else :
+    st.metric(
+    label=f"{symbol} Price From {period}",
+    value=f"{float(last_close_usd):.2f} USD",
+    delta=f"Changes : {float(change_usd):.2f} ({float(pct_change_usd):.2f} %)")
 
+
+col1, col2, col3 = st.columns(3)
 # Show metrics
 # st.metric(label="Last Close", value=f"${metrics[0]:.2f}")
 # st.metric(label="Change", value=f"${metrics[1]:.2f}")
