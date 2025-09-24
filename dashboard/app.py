@@ -72,6 +72,10 @@ stock_data = fetcher.process_datas(stock_data)
 # stock_data = fetcher.add_technical_indicators(stock_data)
 last_close, change, pct_change, high, low, volume = fetcher.calculate_metrics(stock_data)
 
+st.metric(
+    label=f"{symbol} Price From {period}",
+    value=f"{float(last_close):.2f} USD",
+    delta=f"Changes : {float(change):.2f} ({float(pct_change):.2f} %)")
 
 # Show metrics
 # st.metric(label="Last Close", value=f"${metrics[0]:.2f}")
