@@ -10,15 +10,6 @@ st.title("📈 Real Time Stock and Crypto Dashboard")
 # Sidebar
 st.sidebar.header("Dashboard Controls")
 symbol = st.sidebar.text_input("Stock Symbol", value="AAPL")
-period = st.sidebar.selectbox("Time Period", ["1 Day", "1 Week", "1 Month", "1 Year", "Max"])
-chart_type = st.sidebar.selectbox("Chart Type", ["Candlestick", "Line"])
-period_to_id = {
-    "1 Day" : "1m", 
-    "1 Week" : "30m", 
-    "1 Month" : "1d", 
-    "1 Year" : "1wk", 
-    "Max" : "1wk"
-}
 crypto_choice = st.sidebar.selectbox(
     "Crypto", 
     ["Bitcoin (BTC)", 
@@ -32,6 +23,15 @@ crypto_choice = st.sidebar.selectbox(
     "Chainlink (LINK)", 
     "Polygon (MATIC)"]
 )
+period = st.sidebar.selectbox("Time Period", ["1 Day", "1 Week", "1 Month", "1 Year", "Max"])
+chart_type = st.sidebar.selectbox("Chart Type", ["Candlestick", "Line"])
+period_to_id = {
+    "1 Day" : "1m", 
+    "1 Week" : "30m", 
+    "1 Month" : "1d", 
+    "1 Year" : "1wk", 
+    "Max" : "1wk"
+}
 name_to_id = {
     "Bitcoin (BTC)": "bitcoin",
     "Ethereum (ETH)": "ethereum",
