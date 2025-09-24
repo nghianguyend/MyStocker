@@ -69,10 +69,11 @@ class FetchData :
         return stock_info
 
     
-    def process_datas(self, data) :
+    def process_datas(self, data, convert_timezone=True) :
         if data.index.tzinfo == None :
             data.index = data.index.tz_localize("UTC")
-        data.index = data.index.tz_convert("US/Eastern")
+        if convert_timezone :
+            data.index = data.index.tz_convert("US/Eastern")
         data.reset_index(inplace=True)
         if "Date" in data.columns:
             data.rename(columns={"Date": "Datetime"}, inplace=True)
