@@ -26,11 +26,18 @@ crypto_choice = st.sidebar.selectbox(
 period = st.sidebar.selectbox("Time Period", ["1 Day", "1 Week", "1 Month", "1 Year", "Max"])
 chart_type = st.sidebar.selectbox("Chart Type", ["Candlestick", "Line"])
 period_to_id = {
-    "1 Day" : "1m", 
-    "1 Week" : "30m", 
-    "1 Month" : "1d", 
-    "1 Year" : "1wk", 
-    "Max" : "1wk"
+    "1 Day" : "1d", 
+    "1 Week" : "1wk", 
+    "1 Month" : "1mo", 
+    "1 Year" : "1y", 
+    "Max" : "max"
+}
+interval_mapping = {
+    "1d" : "1m",
+    "1wk" : "30m",
+    "1mo" : "1d",
+    "1y" : "1wk",
+    "max" : "1wk",
 }
 name_to_id = {
     "Bitcoin (BTC)": "bitcoin",
@@ -59,9 +66,10 @@ if crypto_df is not None:
 
 # Fetch Stock Prices
 st.subheader(f"Stock Prices: {symbol}")
-stock_df = fetcher.get_stock_prices(symbol, period="5d", interval="1d")
+stock_df = fetcher.get_stock_prices(symbol, period_to_id[period], interval_mapping[period_to_id[period]])
 stock_df = fetcher.process_datas(stock_df)
-metrics = fetcher.calculate_metrics(stock_df)
+stock_df = fetcher.add_technical_indicators(stock_df)
+last_close, change, pct_change, high, low, volume = fetcher.calculate_metrics(stock_df)
 
 # Show metrics
 # st.metric(label="Last Close", value=f"${metrics[0]:.2f}")
@@ -71,40 +79,40 @@ metrics = fetcher.calculate_metrics(stock_df)
 # st.metric(label="Low", value=f"${metrics[4]:.2f}")
 
 # Make Stock Chart 
-fig = make_subplots(rows=1, cols=1)
-fig.add_trace(go.Candlestick(
-    x=stock_df['Date'],
-    open=stock_df['Open'],
-    high=stock_df['High'],
-    low=stock_df['Low'],
-    close=stock_df['Close'],
-    name=symbol
-))
-st.plotly_chart(fig, use_container_width=True)
+# fig = make_subplots(rows=1, cols=1)
+# fig.add_trace(go.Candlestick(
+#     x=stock_df['Date'],
+#     open=stock_df['Open'],
+#     high=stock_df['High'],
+#     low=stock_df['Low'],
+#     close=stock_df['Close'],
+#     name=symbol
+# ))
+# st.plotly_chart(fig, use_container_width=True)
 
-def main():
-    fetcher = FetchData()
-    # --- Test Crypto Prices ---
-    print("Fetching crypto prices...")
-    crypto_df = fetcher.get_cryto_prices()
-    if crypto_df is not None:
-        print(crypto_df.head(), "\n")
+# def main():
+#     fetcher = FetchData()
+#     # --- Test Crypto Prices ---
+#     print("Fetching crypto prices...")
+#     crypto_df = fetcher.get_cryto_prices()
+#     if crypto_df is not None:
+#         print(crypto_df.head(), "\n")
 
-    # --- Test Stock Prices ---
-    print("Fetching stock prices for AAPL (Apple)...")
-    stock_df = fetcher.get_stock_prices("AAPL", period="5d", interval="1d")
-    print("Before reset_index():")
-    print(stock_df.head(), "\n")   # Date is in the index
+#     # --- Test Stock Prices ---
+#     print("Fetching stock prices for AAPL (Apple)...")
+#     stock_df = fetcher.get_stock_prices("AAPL", period="5d", interval="1d")
+#     print("Before reset_index():")
+#     print(stock_df.head(), "\n")   # Date is in the index
 
-    # Process the data (with reset_index)
-    stock_df = fetcher.process_datas(stock_df)
-    print("After process_datas (reset_index applied):")
-    print(stock_df.head())         # Datetime is now a column
+#     # Process the data (with reset_index)
+#     stock_df = fetcher.process_datas(stock_df)
+#     print("After process_datas (reset_index applied):")
+#     print(stock_df.head())         # Datetime is now a column
     
-    stock_datas = fetcher.calculate_metrics(stock_df)
-    print(stock_datas)
+#     stock_datas = fetcher.calculate_metrics(stock_df)
+#     print(stock_datas)
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
 
 

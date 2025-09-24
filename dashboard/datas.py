@@ -65,7 +65,8 @@ class FetchData :
         pct_change = (change / prev_close) * 100
         high = data['High'].max()
         low = data['Low'].min()
-        return last_close, change, pct_change, high, low
+        volume = data['Volume'].sum()
+        return last_close, change, pct_change, high, low, volume
     
     def add_technical_indicators(self, data, sma_windows=[20], ema_windows=[20]):
         """
