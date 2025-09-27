@@ -5,7 +5,6 @@ import yfinance as yf
 import pytz
 import ta
 class FetchData :
-    
     def __init__(self) :
         self.crypto_url = "https://api.coingecko.com/api/v3/simple/price" 
         
@@ -39,6 +38,14 @@ class FetchData :
             print("Request failed:", error)
         return None
     
+    def get_crypto_metrics(self, data, currency="USD") :
+        if currency.upper() == "EUR" :
+            price = data['eur_price']
+            change = data['eur_exchange']
+        else : 
+            price = data['usd_price']
+            change = data['usd_exchange']
+        return price, change
         
     def get_stock_prices(self, ticker, period="1mo", interval="1d", in_euro=False):
         end_date = datetime.now()

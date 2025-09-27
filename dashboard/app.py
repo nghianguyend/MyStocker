@@ -61,19 +61,24 @@ coin_id = name_to_id[crypto_choice]
 fetcher = FetchData()
 
 # Fetch Crypto Prices 
-st.subheader(f"Crypto Prices: {coin_id}")
-crypto_df = fetcher.get_cryto_prices(coin_id)
-if crypto_df is not None:
-    st.dataframe(crypto_df.tail(5))  
-
+st.subheader(f"Crypto Prices : {crypto_choice}")
+crypto_data = fetcher.get_cryto_prices(coin_id)
+crypto_price, crypto_change = fetcher.get_crypto_metrics(crypto_data, currency=currency_type)
+crypto_change_pct=crypto_change*100
+# Display Crypto
+st.metric(
+    label=f"Current {crypto_choice} Price",
+    value=f"{float(crypto_price):.2f} {currency_type}",
+    delta=f"Changes : {float(crypto_change):.2f} ({float(crypto_change_pct):.2f} %)"
+)
 # Fetch Stock Prices
-st.subheader(f"Stock Prices: {symbol}")
+st.subheader(f"Stock Prices : {symbol}")
 in_eur = currency_type == "EUR"
 stock_data = fetcher.get_stock_prices(symbol, period_to_id[period], interval_mapping[period_to_id[period]], in_euro=in_eur)
 stock_data = fetcher.process_datas(stock_data, convert_timezone=True)
 last_close, change, pct_change, high, low, volume = fetcher.calculate_metrics(stock_data)
 
-# Display
+# Display Stocks
 st.metric(
     label=f"{symbol} Price From {period}",
     value=f"{float(last_close):.2f} {'EUR' if in_eur else 'USD'}",
