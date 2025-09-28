@@ -87,6 +87,10 @@ st.metric(
 
 
 col1, col2, col3 = st.columns(3)
+col1.metric("High", f"{high:.2f} USD")
+col2.metric("Low", f"{low:.2f} USD")
+col3.metric("Volume", f"{volume:,}")
+    
 # Show metrics
 # st.metric(label="Last Close", value=f"${metrics[0]:.2f}")
 # st.metric(label="Change", value=f"${metrics[1]:.2f}")

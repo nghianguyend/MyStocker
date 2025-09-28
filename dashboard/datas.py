@@ -91,9 +91,9 @@ class FetchData :
         prev_close = data['Close'].iloc[-1]
         change = last_close - prev_close
         pct_change = (change / prev_close) * 100
-        high = data['High'].max()
-        low = data['Low'].min()
-        volume = data['Volume'].sum()
+        high = float(data['High'].max())
+        low = float(data['Low'].min())
+        volume = int(data['Volume'].sum())
         return last_close, change, pct_change, high, low, volume
     
     def add_technical_indicators(self, data):
