@@ -87,8 +87,8 @@ st.metric(
 
 
 col1, col2, col3 = st.columns(3)
-col1.metric("High", f"{high:.2f} USD")
-col2.metric("Low", f"{low:.2f} USD")
+col1.metric("High", f"{high:.2f} {currency_type}")
+col2.metric("Low", f"{low:.2f} {currency_type}")
 col3.metric("Volume", f"{volume:,}")
     
 # Show metrics
