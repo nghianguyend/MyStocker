@@ -64,7 +64,14 @@ fetcher = FetchData()
 in_eur = currency_type == "EUR"
 st.subheader(f"Crypto Prices : {crypto_choice}")
 crypto_data = fetcher.get_crypto_prices(coin_id, period_to_id[period], interval_mapping[period_to_id[period]], in_euro=in_eur)
+last_close_crypto, change_crypto, pct_change_crypto, high_crypto, low_crypto, volume_crypto = fetcher.calculate_metrics(crypto_data)
+
 # Display Crypto
+st.metric(
+    label=f"{crypto_choice} Price From {period}",
+    value=f"{float(last_close_crypto):.2f} {'EUR' if in_eur else 'USD'}",
+    delta=f"Changes : {float(change_crypto):.2f} ({float(pct_change_crypto):.2f} %)"
+)
 
 # Fetch Stock Prices
 st.subheader(f"Stock Prices : {symbol}")
