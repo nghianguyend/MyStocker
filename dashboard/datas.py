@@ -54,25 +54,14 @@ class FetchData :
             stock_info = yf.download(ticker, start=start_date, end=end_date, interval=interval)
         else:
             stock_info = yf.download(ticker, period=period, interval=interval)
+        if stock_info.empty:
+            return stock_info
 
         if in_euro:
-            ticker_info = yf.Ticker(ticker).info
-            currency = ticker_info.get("currency", "USD")
-            if currency != "EUR":
-                currency_map = {
-                    "USD": "EURUSD=X",
-                    "GBP": "EURGBP=X",
-                    "CHF": "EURCHF=X",
-                    "JPY": "EURJPY=X",
-                }
-                if currency in currency_map:
-                    fx_ticker = currency_map[currency]
-                    fx_data = yf.download(fx_ticker, period=period, interval=interval)
-                    fx_close = fx_data["Close"]
-                    # Align indices 
-                    fx_close_aligned, _ = fx_close.align(stock_info["Close"], join="right", method="ffill")
-                    for col in ["Open", "High", "Low", "Close"]:
-                        stock_info[col] = stock_info[col].div(fx_close_aligned)
+            fx = yf.Ticker("EURUSD=X")
+            conversion_rate = fx.history(period="1d")["Close"].iloc[-1]
+            for col in ["Open", "High", "Low", "Close"] :
+                stock_info[col] *= conversion_rate
         return stock_info
 
     
