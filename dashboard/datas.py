@@ -56,7 +56,6 @@ class FetchData :
             stock_info = yf.download(ticker, period=period, interval=interval)
         if stock_info.empty:
             return stock_info
-
         if in_euro:
             fx = yf.Ticker("EURUSD=X")
             conversion_rate = fx.history(period="1d")["Close"].iloc[-1]
