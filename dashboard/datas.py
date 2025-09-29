@@ -5,7 +5,6 @@ import yfinance as yf
 import pytz
 import ta
 class FetchData :
-    
     def get_crypto_prices(self, ticker, period="1mo", interval="1d", in_euro=False) :
         end_date = datetime.now()
         if period == "1wk":

@@ -1,8 +1,8 @@
-import yfinance as yf
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
+import plotly.express as px
 from datas import FetchData
 import streamlit as st
+import pandas as pd
 
 st.set_page_config(layout="wide")
 st.title("📈 Real Time Stock and Crypto Dashboard")
@@ -91,6 +91,33 @@ col1, col2, col3 = st.columns(3)
 col1.metric("High", f"{high:.2f} {currency_type}")
 col2.metric("Low", f"{low:.2f} {currency_type}")
 col3.metric("Volume", f"{volume:,}")
+
+if isinstance(stock_data.columns, pd.MultiIndex):
+    stock_data.columns = [col[0] for col in stock_data.columns]
+
+stock_data = stock_data.reset_index()
+if 'Date' in stock_data.columns:
+    stock_data.rename(columns={'Date': 'Datetime'}, inplace=True)
+
+# Ensure numeric
+for col in ['Open','High','Low','Close','Volume']:
+    stock_data[col] = pd.to_numeric(stock_data[col], errors='coerce')
+
+# Plot
+fig = go.Figure()
+fig.add_trace(go.Candlestick(
+    x=stock_data['Datetime'],
+    open=stock_data['Open'],
+    high=stock_data['High'],
+    low=stock_data['Low'],
+    close=stock_data['Close']
+))
+
+fig.update_layout(title=f'{symbol} {period.upper()} Chart',
+                  xaxis_title='Time',
+                  yaxis_title='Price ({})'.format('EUR' if in_eur else 'USD'),
+                  height=600)
+st.plotly_chart(fig, use_container_width=True)
     
 # Show metrics
 # st.metric(label="Last Close", value=f"${metrics[0]:.2f}")
