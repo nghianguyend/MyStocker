@@ -8,44 +8,67 @@ class FetchData :
     def __init__(self) :
         self.crypto_url = "https://api.coingecko.com/api/v3/simple/price" 
         
-    def get_cryto_prices(self, coins="bitcoin,ethereum,cardano,dogecoin,solana,polkadot,litecoin,tron,chainlink,polygon") :
-        try :
-            params = {
-                'ids': coins,
-                'vs_currencies': 'usd,eur',
-                'include_24hr_change': 'true'
-            }
-            resp = requests.get(self.crypto_url, params=params, timeout=10)
-            resp.raise_for_status()
-            if resp.status_code == 200 :
-                datas = resp.json()
-                # return data.items()
-                coin_list = []
+    # def get_cryto_prices(self, coins="bitcoin,ethereum,cardano,dogecoin,solana,polkadot,litecoin,tron,chainlink,polygon") :
+    #     try :
+    #         params = {
+    #             'ids': coins,
+    #             'vs_currencies': 'usd, eur',
+    #             'include_24hr_change': 'true'
+    #         }
+    #         resp = requests.get(self.crypto_url, params=params, timeout=10)
+    #         resp.raise_for_status()
+    #         if resp.status_code == 200 :
+    #             datas = resp.json()
+    #             # return data.items()
+    #             coin_list = []
                 
-                for name, coin_info in datas.items() :
-                    coin_list.append({
-                        'coin' : name.title(),
-                        'usd_price' : coin_info['usd'], 
-                        'usd_exchange' : coin_info['usd_24h_change'],
-                        'eur_price' : coin_info['eur'],
-                        'eur_exchange' : coin_info['eur_24h_change'],
-                        'time' : datetime.now()
-                    })
-                return pd.DataFrame(coin_list)       
-        except requests.exceptions.HTTPError as error:
-            print("HTTP error:", error)
-        except requests.exceptions.RequestException as error:
-            print("Request failed:", error)
-        return None
+    #             for name, coin_info in datas.items() :
+    #                 coin_list.append({
+    #                     'coin' : name.title(),
+    #                     'usd_price' : coin_info['usd'], 
+    #                     'usd_exchange' : coin_info['usd_24h_change'],
+    #                     'eur_price' : coin_info['eur'],
+    #                     'eur_exchange' : coin_info['eur_24h_change'],
+    #                     'time' : datetime.now()
+    #                 })
+    #             return pd.DataFrame(coin_list)       
+    #     except requests.exceptions.HTTPError as error:
+    #         print("HTTP error:", error)
+    #     except requests.exceptions.RequestException as error:
+    #         print("Request failed:", error)
+    #     return None
     
-    def get_crypto_metrics(self, data, currency="USD") :
-        if currency.upper() == "EUR" :
-            price = data['eur_price']
-            change = data['eur_exchange']
-        else : 
-            price = data['usd_price']
-            change = data['usd_exchange']
-        return price, change
+    # def get_crypto_metrics(self, data, currency="USD"):
+    #     if data is None or data.empty:  # handle None or empty DataFrame
+    #         return None, None
+    #     currency = currency.upper()
+    #     try:
+    #         if currency == "EUR":
+    #             price = float(data['eur_price'].iloc[0]) if 'eur_price' in data else None
+    #             change = float(data['eur_exchange'].iloc[0]) if 'eur_exchange' in data else None
+    #         else:
+    #             price = float(data['usd_price'].iloc[0]) if 'usd_price' in data else None
+    #             change = float(data['usd_exchange'].iloc[0]) if 'usd_exchange' in data else None
+    #     except Exception as e:
+    #         print(f"Error in get_crypto_metrics: {e}")
+    #         return None, None
+    #     return price, change
+    
+    def get_crypto_prices(self, ticker, period="1mo", interval="1d", in_euro=False) :
+        end_date = datetime.now()
+        if period == "1wk":
+            start_date = end_date - timedelta(days=7)
+            stock_info = yf.download(ticker, start=start_date, end=end_date, interval=interval)
+        else:
+            stock_info = yf.download(ticker, period=period, interval=interval)
+        if stock_info.empty:
+            return stock_info
+        if in_euro:
+            fx = yf.Ticker("EURUSD=X")
+            conversion_rate = fx.history(period="1d")["Close"].iloc[-1]
+            for col in ["Open", "High", "Low", "Close"] :
+                stock_info[col] *= conversion_rate
+        return stock_info
         
     def get_stock_prices(self, ticker, period="1mo", interval="1d", in_euro=False):
         end_date = datetime.now()

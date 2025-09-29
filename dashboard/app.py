@@ -1,3 +1,6 @@
+import yfinance as yf
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 from datas import FetchData
 import streamlit as st
 
@@ -39,16 +42,16 @@ interval_mapping = {
     "max" : "1wk",
 }
 name_to_id = {
-    "Bitcoin (BTC)": "bitcoin",
-    "Ethereum (ETH)": "ethereum",
-    "Cardano (ADA)": "cardano",
-    "Dogecoin (DOGE)": "dogecoin",
-    "Solana (SOL)": "solana",
-    "Polkadot (DOT)": "polkadot",
-    "Litecoin (LTC)": "litecoin",
-    "Tron (TRX)": "tron",
-    "Chainlink (LINK)": "chainlink",
-    "Polygon (MATIC)": "polygon"
+    "Bitcoin (BTC)": "BTC-USD",
+    "Ethereum (ETH)": "ETH-USD",
+    "Cardano (ADA)": "ADA-USD",
+    "Dogecoin (DOGE)": "DOGE-USD",
+    "Solana (SOL)": "SOL-USD",
+    "Polkadot (DOT)": "DOT-USD",
+    "Litecoin (LTC)": "LTC-USD",
+    "Tron (TRX)": "TRX-USD",
+    "Chainlink (LINK)": "LINK-USD",
+    "Polygon (MATIC)": "MATIC-USD"
 }
 
 #Get GeckoAPI coin_id
@@ -58,19 +61,13 @@ coin_id = name_to_id[crypto_choice]
 fetcher = FetchData()
 
 # Fetch Crypto Prices 
+in_eur = currency_type == "EUR"
 st.subheader(f"Crypto Prices : {crypto_choice}")
-crypto_data = fetcher.get_cryto_prices(coin_id)
-crypto_price, crypto_change = fetcher.get_crypto_metrics(crypto_data, currency=currency_type)
-crypto_change_pct=crypto_change*100
+crypto_data = fetcher.get_crypto_prices(coin_id, period_to_id[period], interval_mapping[period_to_id[period]], in_euro=in_eur)
 # Display Crypto
-st.metric(
-    label=f"Current {crypto_choice} Price",
-    value=f"{float(crypto_price):.2f} {currency_type}",
-    delta=f"Changes : {float(crypto_change):.2f} ({float(crypto_change_pct):.2f} %)"
-)
+
 # Fetch Stock Prices
 st.subheader(f"Stock Prices : {symbol}")
-in_eur = currency_type == "EUR"
 stock_data = fetcher.get_stock_prices(symbol, period_to_id[period], interval_mapping[period_to_id[period]], in_euro=in_eur)
 stock_data = fetcher.process_datas(stock_data, convert_timezone=True)
 last_close, change, pct_change, high, low, volume = fetcher.calculate_metrics(stock_data)
@@ -111,7 +108,7 @@ def main():
     fetcher = FetchData()
     # --- Test Crypto Prices ---
     print("Fetching crypto prices...")
-    crypto_df = fetcher.get_cryto_prices()
+    crypto_df = fetcher.get_crypto_prices(coin_id, period_to_id[period], interval_mapping[period_to_id[period]], in_euro=in_eur)
     if crypto_df is not None:
         print(crypto_df.head(), "\n")
 
