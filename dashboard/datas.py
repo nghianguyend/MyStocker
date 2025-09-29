@@ -72,16 +72,16 @@ class FetchData:
         return data
 
 
-# --- Usage Examples ---
-fetcher = FetchData()
+# # --- Usage Examples ---
+# fetcher = FetchData()
 
-# 1. Fetch Bitcoin prices in EUR
-btc_data = fetcher.get_crypto_prices("BTC-USD", period="1mo", in_euro=True)
+# # 1. Fetch Bitcoin prices in EUR
+# btc_data = fetcher.get_crypto_prices("BTC-USD", period="1mo", in_euro=True)
 
-# 2. Fetch Apple stock prices in EUR
-aapl_data = fetcher.get_stock_prices("AAPL", period="1mo", in_euro=True)
+# # 2. Fetch Apple stock prices in EUR
+# aapl_data = fetcher.get_stock_prices("AAPL", period="1mo", in_euro=True)
 
-# 3. Add indicators + metrics
-aapl_data = fetcher.add_technical_indicators(aapl_data)
-metrics = fetcher.calculate_metrics(aapl_data)
-print("AAPL Metrics:", metrics)
+# # 3. Add indicators + metrics
+# aapl_data = fetcher.add_technical_indicators(aapl_data)
+# metrics = fetcher.calculate_metrics(aapl_data)
+# print("AAPL Metrics:", metrics)
