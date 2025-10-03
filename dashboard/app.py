@@ -90,14 +90,25 @@ for col in ['Open','High','Low','Close','Volume']:
     crypto_data[col] = pd.to_numeric(crypto_data[col], errors='coerce')
 
 # Plot
+max_points = 50
+plot_data = crypto_data.tail(max_points)
 fig = go.Figure()
-fig.add_trace(go.Candlestick(
-    x=crypto_data['Datetime'],
-    open=crypto_data['Open'],
-    high=crypto_data['High'],
-    low=crypto_data['Low'],
-    close=crypto_data['Close']
-))
+if chart_type == "Candlestick":
+    fig.add_trace(go.Candlestick(
+        x=plot_data['Datetime'],
+        open=plot_data['Open'],
+        high=plot_data['High'],
+        low=plot_data['Low'],
+        close=plot_data['Close'],
+        name="Price"
+    ))
+else:  # Line chart
+    fig.add_trace(go.Scatter(
+        x=plot_data['Datetime'],
+        y=plot_data['Close'],
+        mode='lines',
+        name="Close Price"
+    ))
 fig.update_layout(title=f'{crypto_choice} {period.upper()} Chart',
                   xaxis_title='Time',
                   yaxis_title='Price ({})'.format('EUR' if in_eur else 'USD'),
