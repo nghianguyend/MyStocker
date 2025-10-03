@@ -171,25 +171,7 @@ fig.update_layout(title=f'{symbol} {period.upper()} Chart',
                   height=600)
 st.plotly_chart(fig, use_container_width=True)
     
-# Show metrics
-# st.metric(label="Last Close", value=f"${metrics[0]:.2f}")
-# st.metric(label="Change", value=f"${metrics[1]:.2f}")
-# st.metric(label="% Change", value=f"{metrics[2]:.2f}%")
-# st.metric(label="High", value=f"${metrics[3]:.2f}")
-# st.metric(label="Low", value=f"${metrics[4]:.2f}")
-
-# Make Stock Chart 
-# fig = make_subplots(rows=1, cols=1)
-# fig.add_trace(go.Candlestick(
-#     x=stock_df['Date'],
-#     open=stock_df['Open'],
-#     high=stock_df['High'],
-#     low=stock_df['Low'],
-#     close=stock_df['Close'],
-#     name=symbol
-# ))
-# st.plotly_chart(fig, use_container_width=True)
-
+    
 def main():
     fetcher = FetchData()
     # --- Test Crypto Prices ---
