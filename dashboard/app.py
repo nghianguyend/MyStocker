@@ -146,15 +146,25 @@ for col in ['Open','High','Low','Close','Volume']:
     stock_data[col] = pd.to_numeric(stock_data[col], errors='coerce')
 
 # Plot
+max_points = 70
+plot_data = stock_data.tail(max_points)
 fig = go.Figure()
-fig.add_trace(go.Candlestick(
-    x=stock_data['Datetime'],
-    open=stock_data['Open'],
-    high=stock_data['High'],
-    low=stock_data['Low'],
-    close=stock_data['Close']
-))
-
+if chart_type == "Candlestick":
+    fig.add_trace(go.Candlestick(
+        x=plot_data['Datetime'],
+        open=plot_data['Open'],
+        high=plot_data['High'],
+        low=plot_data['Low'],
+        close=plot_data['Close'],
+        name="Price"
+    ))
+else:  # Line chart
+    fig.add_trace(go.Scatter(
+        x=plot_data['Datetime'],
+        y=plot_data['Close'],
+        mode='lines',
+        name="Close Price"
+    ))
 fig.update_layout(title=f'{symbol} {period.upper()} Chart',
                   xaxis_title='Time',
                   yaxis_title='Price ({})'.format('EUR' if in_eur else 'USD'),
