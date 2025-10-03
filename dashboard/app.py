@@ -171,7 +171,7 @@ fig.update_layout(title=f'{symbol} {period.upper()} Chart',
                   height=600)
 st.plotly_chart(fig, use_container_width=True)
     
-    
+
 def main():
     fetcher = FetchData()
     # --- Test Crypto Prices ---
