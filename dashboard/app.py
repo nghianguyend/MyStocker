@@ -73,6 +73,37 @@ st.metric(
     delta=f"Changes : {float(change_crypto):.2f} ({float(pct_change_crypto):.2f} %)"
 )
 
+col1_crypto, col2_crypto, col3_crypto = st.columns(3)
+col1_crypto.metric("High", f"{high_crypto:.2f} {currency_type}")
+col2_crypto.metric("Low", f"{low_crypto:.2f} {currency_type}")
+col3_crypto.metric("Volume", f"{volume_crypto:,}")
+
+if isinstance(crypto_data.columns, pd.MultiIndex):
+    crypto_data.columns = [col[0] for col in crypto_data.columns]
+
+crypto_data = crypto_data.reset_index()
+if 'Date' in crypto_data.columns:
+    crypto_data.rename(columns={'Date': 'Datetime'}, inplace=True)
+
+# Ensure numeric
+for col in ['Open','High','Low','Close','Volume']:
+    crypto_data[col] = pd.to_numeric(crypto_data[col], errors='coerce')
+
+# Plot
+fig = go.Figure()
+fig.add_trace(go.Candlestick(
+    x=crypto_data['Datetime'],
+    open=crypto_data['Open'],
+    high=crypto_data['High'],
+    low=crypto_data['Low'],
+    close=crypto_data['Close']
+))
+fig.update_layout(title=f'{crypto_choice} {period.upper()} Chart',
+                  xaxis_title='Time',
+                  yaxis_title='Price ({})'.format('EUR' if in_eur else 'USD'),
+                  height=600)
+st.plotly_chart(fig, use_container_width=True)
+
 # Fetch Stock Prices
 st.subheader(f"Stock Prices : {symbol}")
 stock_data = fetcher.get_stock_prices(symbol, period_to_id[period], interval_mapping[period_to_id[period]], in_euro=in_eur)
