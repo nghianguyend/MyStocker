@@ -89,6 +89,22 @@ if 'Date' in crypto_data.columns:
 for col in ['Open','High','Low','Close','Volume']:
     crypto_data[col] = pd.to_numeric(crypto_data[col], errors='coerce')
 
+# Convert Datetime
+crypto_data['Datetime'] = pd.to_datetime(crypto_data['Datetime'])
+crypto_data.set_index('Datetime', inplace=True)
+
+# Resample intraday data for 1 Day
+if period == "1 Day":
+    crypto_data = crypto_data.resample('15T').agg({
+        'Open':'first',
+        'High':'max',
+        'Low':'min',
+        'Close':'last',
+        'Volume':'sum'
+    }).dropna()
+
+crypto_data = crypto_data.reset_index()
+
 # Plot
 max_points = 50
 plot_data = crypto_data.tail(max_points)
