@@ -106,7 +106,7 @@ if period == "1 Day":
 crypto_data = crypto_data.reset_index()
 
 # Plot
-max_points = 70
+max_points = 150
 plot_data = crypto_data.tail(max_points)
 fig = go.Figure()
 if chart_type == "Candlestick":
