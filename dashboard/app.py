@@ -106,7 +106,7 @@ if period == "1 Day":
 crypto_data = crypto_data.reset_index()
 
 # Plot
-max_points = 50
+max_points = 70
 plot_data = crypto_data.tail(max_points)
 fig = go.Figure()
 if chart_type == "Candlestick":
@@ -162,7 +162,7 @@ for col in ['Open','High','Low','Close','Volume']:
     stock_data[col] = pd.to_numeric(stock_data[col], errors='coerce')
 
 # Plot
-max_points = 70
+max_points = 60
 plot_data = stock_data.tail(max_points)
 fig = go.Figure()
 if chart_type == "Candlestick":
